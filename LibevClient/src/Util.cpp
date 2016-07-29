@@ -235,7 +235,7 @@ int Util::CreateSocket(const char* server, const unsigned int port)
 	struct sockaddr_in serverAddr;
 	bzero(&serverAddr, sizeof(serverAddr));
 
-	g_log.Log(INFO, "[%s-%d-%s]: create socket :%s :%d", __FILE__, __LINE__, __FUNCTION__, server, port);
+	g_log.Log(INFO, "[%s-%d-%s]: create socket : [%s] : [%d]", __FILE__, __LINE__, __FUNCTION__, server, port);
 
 	socketfd = socket(AF_INET,SOCK_STREAM,0);
     if (-1 == socketfd)
@@ -245,14 +245,15 @@ int Util::CreateSocket(const char* server, const unsigned int port)
     }
 
     serverAddr.sin_family = AF_INET;
+	serverAddr.sin_port = htons(port);
     if (inet_aton(server, &serverAddr.sin_addr) == 0) 
 	{
-        g_log.Log(INFO, "[%s-%d-%s]: Server IP Address Error!", __FILE__, __LINE__, __FUNCTION__);
+        g_log.Log(ERROR, "[%s-%d-%s]: Server IP Address Error!", __FILE__, __LINE__, __FUNCTION__);
         close(socketfd);
         return -1;
     }
 
-    serverAddr.sin_port = htons(port);
+    
     socklen_t server_addr_length = sizeof(serverAddr);
     if (connect(socketfd, (struct sockaddr*) &serverAddr, server_addr_length) < 0)
 	{

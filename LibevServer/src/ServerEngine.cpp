@@ -1,13 +1,92 @@
 #include "ServerEngine.h"
+#include "ServerCommon.h"
+#include "DaemonProcess.h"
 
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-
-
 namespace LIBEVSERVER
 {
+
+extern DaemonProcess * g_DaemonProcess;
+
+static void *clientRegist(void* data)
+{
+	pthread_detach(pthread_self());
+
+	int *fd = (int*)data;
+	int rev;
+	int sockfd;
+	char buf[DATA_LEN] = {0};
+	fd_set readfds;
+	struct timeval tv;
+
+	if (NULL == fd || *fd < 0)
+	{
+		goto th_exit;
+	}
+
+	sockfd = *fd;
+
+	do
+	{
+		rev = 0;
+		tv.tv_sec = 10;
+		tv.tv_usec = 0;
+
+		FD_ZERO(&readfds);
+		FD_SET(sockfd, &readfds);
+
+		if (select(sockfd+1, &readfds, NULL, NULL, &tv) > 0)
+		{
+			if (FD_ISSET(sockfd, &readfds))
+			{
+				rev = recv(sockfd, buf, DATA_LEN, 0);
+				if (rev > 0 && rev >= COMMAND_HEAD_LEN)
+				{
+					CmdHead *cmdHead = (CmdHead*)buf;
+					if (strncmp((const char*)cmdHead->flag, (const char*)g_fixFlag, 4))
+					{
+						g_log.Log(ERROR, "[%s-%d-%s]: send error data head", __FILE__, __LINE__, __FUNCTION__);
+                        goto th_exit;
+					}
+
+					switch(cmdHead->cmdType)
+					{
+					case BS_CMD_ARPCAPTURE_REGIST:
+						g_log.Log(DEBUG, "[%s-%d-%s]: Arp capture daemon regist commad", __FILE__, __LINE__, __FUNCTION__);
+						if (!g_DaemonProcess->arpCaptureThread.NotifyForTask(sockfd))
+						{
+							close(sockfd);
+							sockfd = 0;
+							g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon is registed", __FILE__, __LINE__, __FUNCTION__);
+						}
+						break;
+
+					/*case BS_CMD_HOSTSCAN_REGIST:
+						break;*/
+					default:
+						g_log.Log(ERROR, "[%s-%d-%s]: error client regist command type: [0x%8x]", __FILE__, __LINE__, __FUNCTION__, cmdHead->cmdType);
+						break;
+					}
+				}
+			}
+		}
+		
+	}while(0);
+
+th_exit:
+	if (NULL != fd)
+	{
+		delete fd;
+		fd = NULL;
+	}
+
+	pthread_exit(NULL);
+	return NULL;
+
+}
 
 ServerEngine::ServerEngine()
 {
@@ -28,10 +107,16 @@ void ServerEngine::stop()
 
 void ServerEngine::loop(int flags)
 {
+	g_log.Log(ERROR, "[%s-%d-%s]: loop", __FILE__, __LINE__, __FUNCTION__, errno);
+	ev::loop_ref loop = ev::get_default_loop();
+	loop.run(flags);
 }
 
 void ServerEngine::unloop(ev::how_t how)
 {
+	g_log.Log(ERROR, "[%s-%d-%s]: unloop", __FILE__, __LINE__, __FUNCTION__, errno);
+	ev::loop_ref loop = ev::get_default_loop();
+	loop.unloop(how);
 }
 
 bool ServerEngine::run()
@@ -99,6 +184,28 @@ socket_err:
 
 void ServerEngine::acceptCallback(ev::io &evio, int revents)
 {
+	struct sockaddr_in clientAddr;
+
+	static unsigned int recode = 1;
+	socklen_t len = sizeof(struct sockaddr_in);
+
+	int fd = accept(evio.fd, (struct sockaddr*)&clientAddr, &len);
+	if (fd < 0)
+	{
+		if (1 == recode)
+		{
+			g_log.Log(WARNING, "[%s-%d-%s]: accept failure, errno:%s", __FILE__, __LINE__, __FUNCTION__, strerror(errno));
+            recode++;
+		}
+		return;
+	}
+
+	int* pFd = new int(fd);
+	pthread_t tid;
+	pthread_create(&tid, NULL, clientRegist, (void*)pFd);
+	
+	g_log.Log(DEBUG, "[%s-%d-%s]: New socket:[%d] is created ", __FILE__, __LINE__, __FUNCTION__, fd);
+	
 }
 
 void ServerEngine::signalCallback(ev::sig &signal, int revents)

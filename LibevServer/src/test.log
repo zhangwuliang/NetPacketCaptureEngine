@@ -1,0 +1,63 @@
+2016-07-29 23:22:29 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:22:29 [LibevServer]-[ERROR] [Util.cpp-47-DaemonIsRunning]: daemon has been in running
+2016-07-29 23:22:29 [LibevServer]-[ERROR] [main.cpp-39-main]: Main process: An instance daemon is  running, exit
+2016-07-29 23:22:47 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:22:47 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:22:47 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [9]
+2016-07-29 23:22:47 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-29 23:22:47 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:22:50 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:22:53 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:22:56 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:23:34 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:23:34 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:23:34 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [9]
+2016-07-29 23:23:34 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-29 23:23:34 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:23:37 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:23:40 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:23:43 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:24:11 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:24:11 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:24:11 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:24:11 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [10]
+2016-07-29 23:24:11 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-29 23:24:14 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:24:17 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:24:20 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:26:12 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:26:12 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:26:12 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [9]
+2016-07-29 23:26:12 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-29 23:26:12 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:26:15 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:26:18 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:26:21 [LibevServer]-[ERROR] [LoadConfigEngine.cpp-114-Init]: Can't add watch for: ./scan_config.json
+2016-07-29 23:27:16 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:27:16 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:27:16 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [10]
+2016-07-29 23:27:16 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-29 23:37:07 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:37:07 [LibevServer]-[ERROR] [Util.cpp-47-DaemonIsRunning]: daemon has been in running
+2016-07-29 23:37:07 [LibevServer]-[ERROR] [main.cpp-39-main]: Main process: An instance daemon is  running, exit
+2016-07-29 23:37:18 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-29 23:37:18 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-29 23:37:18 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [10]
+2016-07-29 23:37:18 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-30 00:22:56 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-30 00:22:56 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-30 00:22:56 [LibevServer]-[INFO] [ServerEngine.cpp-135-createServer]: Create listen socket: [9]
+2016-07-30 00:22:56 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-30 00:37:57 [LibevServer]-[INFO] [Util.cpp-118-CreateDaemonProcess]: Application Control daemon successfully initialized.
+2016-07-30 00:37:57 [LibevServer]-[ERROR] [DaemonProcess.cpp-37-Start]: DaemonProcess Start
+2016-07-30 00:37:57 [LibevServer]-[INFO] [ArpCaptureThread.cpp-29-Init]: ArpCaptureThread Init
+2016-07-30 00:37:57 [LibevServer]-[INFO] [ArpCaptureThread.cpp-90-ThreadMain]: ArpCaptureThread ThreadMain
+2016-07-30 00:37:57 [LibevServer]-[INFO] [ServerEngine.cpp-141-createServer]: Create listen socket: [9]
+2016-07-30 00:37:57 [LibevServer]-[INFO] [DaemonProcess.cpp-59-Start]: Start server engine daemon success
+2016-07-30 00:37:57 [LibevServer]-[ERROR] [ServerEngine.cpp-110-loop]: loop
+2016-07-30 00:38:02 [LibevServer]-[DEBUG] [ServerEngine.cpp-207-acceptCallback]: New socket:[11] is created 
+2016-07-30 00:38:02 [LibevServer]-[DEBUG] [ServerEngine.cpp-58-clientRegist]: Arp capture daemon regist commad
+2016-07-30 00:38:02 [LibevServer]-[INFO] [ArpCaptureThread.cpp-110-NotifyForTask]: ArpCaptureThread NotifyForTask
+2016-07-30 00:38:02 [LibevServer]-[INFO] [ArpCaptureThread.cpp-197-TaskNotifyHandler]: ArpCaptureThread TaskNotifyHandler
+2016-07-30 00:38:02 [LibevServer]-[INFO] [ArpCaptureThread.cpp-129-ProcessHandShakeTask]: ArpCaptureThread ProcessHandShakeTask
+2016-07-30 00:38:02 [LibevServer]-[INFO] [ArpCaptureThread.cpp-160-SendConfigToArpCapture]: ArpCaptureThread SendConfigToArpCapture

@@ -11,7 +11,7 @@ namespace LIBEVCLIENT
 	
 	Loger g_log;
 
-	const char* SERVER = "127.0.0.l";
+	const char* SERVER = "127.0.0.1";
 	const int   PORT   = 11000;
 	
 	const unsigned int MAX_FILE_FD          = 2048;

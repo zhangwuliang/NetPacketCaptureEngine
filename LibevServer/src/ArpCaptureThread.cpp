@@ -26,6 +26,8 @@ ArpCaptureThread::~ArpCaptureThread(void)
 
 int ArpCaptureThread::Init()
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread Init", __FILE__, __LINE__, __FUNCTION__);
+	
 	signalHandle();
 
 	// create event loop
@@ -85,6 +87,8 @@ int ArpCaptureThread::signalHandle()
 
 int ArpCaptureThread::ThreadMain(void *pArg)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread ThreadMain", __FILE__, __LINE__, __FUNCTION__);
+	
 	while(!IsStop())
 	{
 		ev_run(m_loop, EVRUN_ONCE);
@@ -103,6 +107,7 @@ int ArpCaptureThread::StopThread(void)
 
 bool ArpCaptureThread::NotifyForTask(int fd)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread NotifyForTask", __FILE__, __LINE__, __FUNCTION__);
 	BSLock bsLock(m_stateLock);
 
 	if (m_arpSession.getRegisitState())
@@ -120,6 +125,9 @@ bool ArpCaptureThread::NotifyForTask(int fd)
 
 int ArpCaptureThread::ProcessHandShakeTask()
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread ProcessHandShakeTask", __FILE__, __LINE__, __FUNCTION__);
+
+	
 	BSLock bsLock(m_stateLock);
 	if (!m_arpSession.getRegisitState() || m_arpSession.sockfd <= 0)
 	{
@@ -148,6 +156,9 @@ int ArpCaptureThread::ProcessHandShakeTask()
 
 void ArpCaptureThread::SendConfigToArpCapture()
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread SendConfigToArpCapture", __FILE__, __LINE__, __FUNCTION__);
+
+	
 	if (!m_arpSession.getRegisitState())
 	{
 		g_log.Log(INFO, "[%s-%d-%s]: Arp Capture engine not regist", __FILE__, __LINE__, __FUNCTION__);
@@ -182,6 +193,8 @@ void ArpCaptureThread::sessionClosed(Session *session)
 
 void ArpCaptureThread::TaskNotifyHandler(struct ev_loop * loop, ev_async *watcher, int revents)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread TaskNotifyHandler", __FILE__, __LINE__, __FUNCTION__);
+	
 	ArpCaptureThread *pThis = (ArpCaptureThread*)watcher->data;
 
 	if (NULL == pThis)
@@ -201,6 +214,4 @@ void ArpCaptureThread::handShakeWriteCallBack(struct ev_loop * loop, ev_io *watc
 }
 
 
-
-	
 };

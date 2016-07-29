@@ -11,7 +11,7 @@ namespace LIBEVSERVER
 	
 	Loger g_log;
 
-	const char* SCAN_CONFIG_FILENAME = "./scan_config.json";
+	const char* SCAN_CONFIG_FILENAME = "/tmp/scan_config.json";
 	
 	const unsigned char g_fixFlag[4]    = {0x77, 0x88, 'B', 'C'};
 
