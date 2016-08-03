@@ -1,6 +1,7 @@
 #include "ArpCaptureEngine.h"
 #include "Definitions.h"
 #include "Util.h"
+#include <errno.h>
 #include <cpp_common/SocketUtils.h>
 
 namespace LIBEVCLIENT
@@ -101,6 +102,7 @@ int ArpCaptureEngine::StopThread(void)
 
 bool ArpCaptureEngine::NotifyForTask(int fd)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: NotifyForTask!", __FILE__, __LINE__, __FUNCTION__);
 	BSLock bsLock(m_stateLock);
 	if (m_arpSession.getRegisitState())
 	{
@@ -116,6 +118,8 @@ bool ArpCaptureEngine::NotifyForTask(int fd)
 
 int ArpCaptureEngine::ProcessHandShakeTask()
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ProcessHandShakeTask!", __FILE__, __LINE__, __FUNCTION__);
+	
 	BSLock bsLock(m_stateLock);
 	if (!m_arpSession.getRegisitState() || m_arpSession.sockfd <= 0)
 	{
@@ -137,6 +141,9 @@ int ArpCaptureEngine::ProcessHandShakeTask()
 	ev_io_start(m_loop, &m_arpSession.ev_read);
 
 	g_log.Log(DEBUG, "[%s-%d-%s]: libev work, socket:[%d]", __FILE__, __LINE__, __FUNCTION__, m_arpSession.sockfd);
+
+	//send test data
+	m_arpSession.pushData2WriteQueue("Hello, World!\n", 13);
 
 	return RET_SUCCESS;
 	
@@ -166,6 +173,8 @@ void ArpCaptureEngine::sessionClosed(Session* session)
 
 void ArpCaptureEngine::TaskNotifyHandler(struct ev_loop* loop, ev_async *watcher, int revents)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: TaskNotifyHandler!", __FILE__, __LINE__, __FUNCTION__);
+	
 	ArpCaptureEngine *pThis = (ArpCaptureEngine*)watcher->data;
 
 	if (!pThis)
@@ -179,12 +188,165 @@ void ArpCaptureEngine::TaskNotifyHandler(struct ev_loop* loop, ev_async *watcher
 void ArpCaptureEngine::handleShakeReadCallBack(struct ev_loop* loop, ev_io *watcher, int revents)
 {
 	g_log.Log(INFO, "[%s-%d-%s]:============handleShakeReadCallBack RUN================", __FILE__, __LINE__, __FUNCTION__);
+
+	int rev = 0;
+	if (EV_ERROR & revents)
+	{
+		g_log.Log(INFO, "[%s-%d-%s]: Get invalid event", __FILE__, __LINE__, __FUNCTION__);
+        return;
+	}
+
+	if (revents & EV_READ)
+	{
+		Session *session = (Session*)watcher->data;
+		rev = recv(session->sockfd, session->buf+session->bufPos, DATA_LEN-session->bufPos, 0);
+		if (rev > 0)
+		{
+			session->bufPos += rev;
+again:
+			if (session->bufPos < COMMAND_HEAD_LEN)
+			{
+				return;
+			}
+
+			CmdHead *cmdHead = (CmdHead*)session->buf;
+			if (strncmp((const char*)cmdHead->flag, (const char*)g_fixFlag, 4))
+			{
+				 g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture socket [%d] recv len:[%d] send error data head:[0x%x:0x%x:0x%x:0x%x]",
+	                                __FILE__, __LINE__, __FUNCTION__, session->sockfd, rev,
+	                                cmdHead->flag[0], cmdHead->flag[1], cmdHead->flag[2], cmdHead->flag[3]);
+
+				 //session->setBufState(1);
+				 session->setBufPos(1);
+				 goto again;
+			}
+
+			switch(cmdHead->cmdType)
+			{
+				case BS_CMD_REP_REGIST_ARPCAPTURE:
+				{
+					g_log.Log(DEBUG, "[%s-%d-%s]: Command type: BS_CMD_REP_REGIST_ARPCAPTURE", __FILE__, __LINE__, __FUNCTION__);
+
+					CmdArpCaptureData cmdArpCaptureData;
+					Util::SetCmdHead(&cmdArpCaptureData.cmdHead, BS_CMD_ARPCAPTURE_DATA, 0, RST_SUCCESS, CMD_ARPCAPTURE_DATA_LEN);
+					//WriteBuffer *buf = new WriteBuffer((const char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
+					//if (buf != NULL)
+					{
+						//session->pushBuf2WriteQueue(buf);
+						session->pushData2WriteQueue((char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
+						if (!ev_is_active(&session->ev_write))
+						{
+							ev_io_start(session->ev_loop, &session->ev_write);
+						}
+					}
+					//session->setBufState(COMMAND_HEAD_LEN);
+					session->setBufPos(COMMAND_HEAD_LEN);
+				
+				}
+				break;
+				case BS_CMD_ARPCAPTURE_REP_DATA:
+				{
+					g_log.Log(DEBUG, "[%s-%d-%s]: Command type: BS_CMD_ARPCAPTURE_REP_DATA", __FILE__, __LINE__, __FUNCTION__);
+					//session->setBufState(COMMAND_HEAD_LEN);
+					session->setBufPos(COMMAND_HEAD_LEN);
+				}
+				break;
+
+			default:
+				g_log.Log(ERROR, "[%s-%d-%s]: Error Arp Capture Command type: [0x%8x]", __FILE__, __LINE__, __FUNCTION__, cmdHead->cmdType);
+	            //session->setBufState(4);
+	            session->setBufPos(4);
+	            break;
+			}
+
+			goto again;
+		}
+		else if (rev == 0)
+		{
+			g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture read socket is closed: %d", __FILE__, __LINE__, __FUNCTION__, session->sockfd);
+		}
+		else
+		{
+			if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
+		 	{
+				return;
+			}
+			else
+			{
+				g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture read socket [%d] data error: %d", __FILE__, __LINE__, __FUNCTION__, session->sockfd, errno);
+			}
+		}
+
+		ev_io_stop(loop, watcher);
+		sessionClosed(session);
+		return;
+	}
 }
 
 
 void ArpCaptureEngine::handleShakeWriteCallBack(struct ev_loop* loop, ev_io *watcher, int revents)
 {
 	g_log.Log(INFO, "[%s-%d-%s]:============handleShakeWriteCallBack RUN================", __FILE__, __LINE__, __FUNCTION__);
+
+	if (EV_ERROR & revents)
+	{
+		g_log.Log(ERROR, "[%s-%d-%s]: Get invalid event", __FILE__, __LINE__, __FUNCTION__);
+        return;
+	}
+
+	if (EV_WRITE & revents)
+	{
+		Session *session = (Session*)watcher->data;
+
+		BSLock bsLock(session->queueLock);
+		WriteBuffer *buf = NULL;
+
+write_again:
+		if (session->writeQueue.empty())
+		{
+			g_log.Log(INFO, "[%s-%d-%s]:============handleShakeWriteCallBack empty================", __FILE__, __LINE__, __FUNCTION__);
+			ev_io_stop(loop, watcher);
+			return;
+		}
+
+		buf = session->writeQueue.front();
+		g_log.Log(ERROR, "[%s-%d-%s]: Before Send", __FILE__, __LINE__, __FUNCTION__);
+		ssize_t written = send(watcher->fd, "Hello, World!", 13, 0);
+		g_log.Log(ERROR, "[%s-%d-%s]:  Send, fd=%d, write=%d\n", __FILE__, __LINE__, __FUNCTION__, watcher->fd, written);
+		//ssize_t written = send(watcher->fd, buf->dpos(), buf->nbytes(), 0);
+		if (written > 0)
+		{
+			buf->pos += written;
+			if (buf->nbytes() == 0)
+			{
+				session->writeQueue.pop_front();
+				delete buf;
+				buf = NULL;
+
+				goto write_again;
+			}
+			
+		}
+		else if (written == 0)
+		{
+			g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture write socket is closed: %d", __FILE__, __LINE__, __FUNCTION__, watcher->fd);
+		}
+		else
+		{
+			if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
+			{
+				return;
+			}
+			else
+			{
+				 g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture write socket [%d] data error: %d", __FILE__, __LINE__, __FUNCTION__, watcher->fd, errno);
+			}
+		}
+
+		ev_io_stop(loop, watcher);
+		sessionClosed(session);
+		
+	}
 }
 
 }

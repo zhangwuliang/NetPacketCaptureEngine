@@ -42,7 +42,6 @@ void DaemonProcess::InitSignHandler()
 	sigKill.sa_flags = 0;
 	sigaction(SIGKILL, &sigKill, 0);
 
-	
 }	
 
 int DaemonProcess::Start()

@@ -98,6 +98,7 @@ ServerEngine::~ServerEngine()
 
 bool ServerEngine::start()
 {
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	return createServer();
 }
 
@@ -107,30 +108,33 @@ void ServerEngine::stop()
 
 void ServerEngine::loop(int flags)
 {
-	g_log.Log(ERROR, "[%s-%d-%s]: loop", __FILE__, __LINE__, __FUNCTION__, errno);
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	ev::loop_ref loop = ev::get_default_loop();
 	loop.run(flags);
 }
 
 void ServerEngine::unloop(ev::how_t how)
 {
-	g_log.Log(ERROR, "[%s-%d-%s]: unloop", __FILE__, __LINE__, __FUNCTION__, errno);
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	ev::loop_ref loop = ev::get_default_loop();
 	loop.unloop(how);
 }
 
 bool ServerEngine::run()
 {
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	return true;
 }
 
 bool ServerEngine::init()
 {
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	return true;
 }
 
 bool ServerEngine::createServer()
 {
+	g_log.Log(ERROR, "[%s-%d-%s]", __FILE__, __LINE__, __FUNCTION__);
 	socketfd = socket(AF_INET, SOCK_STREAM, 0); //SOCK_CLOEXEC SOCK_STREAM
     if (socketfd < 0)
 	{
@@ -171,9 +175,11 @@ bool ServerEngine::createServer()
         goto socket_err;
     }
 
+	g_log.Log(ERROR, "[%s-%d-%s], ServerEngine Before AcceptCallBack", __FILE__, __LINE__, __FUNCTION__);
     evioSocket.set<ServerEngine, &ServerEngine::acceptCallback>(this);
+	g_log.Log(ERROR, "[%s-%d-%s], ServerEngine After AcceptCallBack, Before Start", __FILE__, __LINE__, __FUNCTION__);
     evioSocket.start(socketfd, EV_READ);
-
+	
 	return true;
 
 socket_err:
@@ -184,6 +190,7 @@ socket_err:
 
 void ServerEngine::acceptCallback(ev::io &evio, int revents)
 {
+	g_log.Log(ERROR, "[%s-%d-%s], ServerEngine AcceptCallBack", __FILE__, __LINE__, __FUNCTION__);
 	struct sockaddr_in clientAddr;
 
 	static unsigned int recode = 1;

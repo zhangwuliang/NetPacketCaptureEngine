@@ -1,4 +1,5 @@
 #include "Session.h"
+#include "Definitions.h"
 
 namespace LIBEVSERVER
 {
@@ -94,10 +95,14 @@ void Session::initSocketState(bool state)
 
 void Session::pushData2WriteQueue(char * data,int len)
 {
+	g_log.Log(ERROR, "[%s-%d-%s]: Session pushData2WriteQueue", __FILE__, __LINE__, __FUNCTION__);
+	
 	static int countPush = 0;
 
 	if (NULL != data && bRegisit)
 	{
+		g_log.Log(ERROR, "[%s-%d-%s]: Enter Session pushData2WriteQueue", __FILE__, __LINE__, __FUNCTION__);
+		
 		WriteBuffer *buf = new WriteBuffer((const char*)data, len);
 		if (buf != NULL)
 		{
@@ -105,6 +110,7 @@ void Session::pushData2WriteQueue(char * data,int len)
 			writeQueue.push_back(buf);
 		}
 
+		g_log.Log(ERROR, "[%s-%d-%s]: Session pushData2WriteQueue OK", __FILE__, __LINE__, __FUNCTION__);
 		ev_async_send(ev_loop, &task_notify);
 	}
 }

@@ -131,6 +131,8 @@ int ArpCaptureThread::ProcessHandShakeTask()
 	BSLock bsLock(m_stateLock);
 	if (!m_arpSession.getRegisitState() || m_arpSession.sockfd <= 0)
 	{
+		g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread getRegisitState ERROR", __FILE__, __LINE__, __FUNCTION__);
+		
 		return RET_ERROR;
 	}
 
@@ -207,10 +209,12 @@ void ArpCaptureThread::TaskNotifyHandler(struct ev_loop * loop, ev_async *watche
 
 void ArpCaptureThread::handShakeReadCallBack(struct ev_loop * loop, ev_io *watcher, int revents)
 {
+	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread handShakeReadCallBack", __FILE__, __LINE__, __FUNCTION__);
 }
 
 void ArpCaptureThread::handShakeWriteCallBack(struct ev_loop * loop, ev_io *watcher, int revents)
 {
+//	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread handShakeWriteCallBack", __FILE__, __LINE__, __FUNCTION__);
 }
 
 

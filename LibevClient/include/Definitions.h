@@ -72,6 +72,24 @@ namespace LIBEVCLIENT
 	
 	extern const unsigned int COMMAND_HEAD_LEN;
 
+	typedef struct 
+	{
+		unsigned short active;
+		char           ip[16];
+		char           mac[18];
+		unsigned short vlanID;
+	}__attribute__ ((packed)) ArpCaptureData;
+
+	const unsigned int ARPCAPTURE_DATA_LEN = sizeof(ArpCaptureData);
+
+	typedef struct 
+	{
+		CmdHead        cmdHead;
+		ArpCaptureData arpCaptureData;
+	} __attribute__ ((packed)) CmdArpCaptureData;
+
+	const unsigned int CMD_ARPCAPTURE_DATA_LEN = sizeof(CmdArpCaptureData);
+
 }
 
 #endif

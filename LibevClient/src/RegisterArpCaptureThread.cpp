@@ -41,6 +41,10 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 					close(socketfd);
 					g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon test is registed", __FILE__, __LINE__, __FUNCTION__);
 				}
+				else
+				{
+					g_log.Log(INFO, "[%s-%d-%s]: Regist to BS Engine successful!", __FILE__, __LINE__, __FUNCTION__);
+				}
 			}
 			else
 			{
