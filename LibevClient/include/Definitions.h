@@ -2,12 +2,14 @@
 #define __DEFINITIONS_H__
 
 #include <cpp_common/Log.h>
+#include <vector>
 
 namespace LIBEVCLIENT
 {
 	extern const char* LOG_CONFIG_FILENAME;
     extern const char* LOCK_FILENAME;
     extern const char* PID_FILENAME;
+	extern const char* CONFIG_FILENAME;
 	
 	extern const int RET_SUCCESS;
 	extern const int RET_ERROR;
@@ -89,6 +91,13 @@ namespace LIBEVCLIENT
 	} __attribute__ ((packed)) CmdArpCaptureData;
 
 	const unsigned int CMD_ARPCAPTURE_DATA_LEN = sizeof(CmdArpCaptureData);
+
+	typedef struct 
+	{
+		std::vector<std::string> interfaces;
+	}MainConfig;
+
+	extern MainConfig g_mainConfig;
 
 }
 

@@ -275,4 +275,29 @@ void Util::SetCmdHead(CmdHead *cmdHead, CommandType cmdType, unsigned int versio
     cmdHead->length = length;
 }
 
+int Util::getJsonInt(Json::Value value, const std::string item)
+{
+	if (!value[item].isNull() && value[item].isInt())
+	{
+		//return value[item].asInt();
+		return value.get(item.c_str(), 0).asInt();
+	}
+
+	//g_log.Log(WARNING, "[%s-%d-%s], the config item [%s] type expected int but it is not", __FILE__, __LINE__, __FUNCTION__, item.c_str());
+	return 0;
+}
+
+std::string Util::getJsonString(Json::Value value, const std::string item)
+{
+	if (!value[item].isNull() && value[item].isString())
+	{
+		//return value[item].asString();
+		return value.get(item.c_str(), "").asString();
+	}
+
+	//g_log.Log(WARNING, "[%s-%d-%s], the config item [%s] type expected string but it is not", __FILE__, __LINE__, __FUNCTION__, item.c_str());
+	return "";
+}
+
+
 

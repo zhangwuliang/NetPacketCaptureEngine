@@ -16,6 +16,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "json/json.h"
 
 #include <cpp_common/BaseLock.h>
 
@@ -47,7 +48,10 @@ public:
 	static int CreateSocket(const char* server, const unsigned int port);
 	
 	static void SetCmdHead(CmdHead *cmdHead, CommandType cmdType, unsigned int versionID, RepResult repStatus, unsigned int length);
-	
+
+	static int getJsonInt(Json::Value value, const std::string item);
+
+	static std::string getJsonString(Json::Value value, const std::string item);
 		
 };
 

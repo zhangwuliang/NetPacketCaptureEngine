@@ -1,5 +1,4 @@
 #include "RegisterArpCaptureThread.h"
-
 #include "DaemonProcess.h"
 
 #include "Util.h"
@@ -17,6 +16,20 @@ RegisterArpCaptureThread::~RegisterArpCaptureThread()
 {
 }
 
+
+int RegisterArpCaptureThread::Init()
+{
+}
+	
+int RegisterArpCaptureThread::UnInit()
+{
+}
+
+int RegisterArpCaptureThread::StopThread(void)
+{
+}
+
+	
 int RegisterArpCaptureThread::ThreadMain(void* pArg)
 {
 	g_log.Log(INFO, "[%s-%d-%s]: Arp Capture thread register", __FILE__, __LINE__, __FUNCTION__);
@@ -36,7 +49,7 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 			socketfd = Util::RegisterMode(SERVER, PORT, BS_CMD_ARPCAPTURE_REGIST);
 			if (socketfd > 0)
 			{
-				if (!g_DaemonProcess->arpCaptureEngine.NotifyForTask(socketfd))
+				if (!g_DaemonProcess->m_arpCaptureEngine.NotifyForTask(socketfd))
 				{
 					close(socketfd);
 					g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon test is registed", __FILE__, __LINE__, __FUNCTION__);

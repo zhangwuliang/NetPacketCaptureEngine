@@ -3,6 +3,8 @@
 
 #include "ArpCaptureEngine.h"
 #include "RegisterArpCaptureThread.h"
+#include "CapturePacketThread.h"
+#include "LoadConfigThread.h"
 
 namespace LIBEVCLIENT
 {
@@ -13,14 +15,20 @@ public:
 	DaemonProcess();
 	~DaemonProcess();
 
+	int WorkInit();
+
+	int WorkUnInit();
+	
 	int Start();
 
 private:
 	void InitSignHandler();
 	
 public:
-	ArpCaptureEngine    arpCaptureEngine;
-	RegisterArpCaptureThread registerArpCaptureThread;
+	ArpCaptureEngine         m_arpCaptureEngine;
+	RegisterArpCaptureThread m_registerArpCaptureThread;
+	LoadConfigThread         m_loadConfigThread;
+	CapturePacketThread*     m_capturePacketThread;
 };
 
 }

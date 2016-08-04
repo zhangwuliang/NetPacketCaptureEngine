@@ -44,20 +44,61 @@ void DaemonProcess::InitSignHandler()
 
 }	
 
-int DaemonProcess::Start()
+
+int DaemonProcess::WorkInit()
 {
 	this->InitSignHandler();
-
-	arpCaptureEngine.Init();
-	arpCaptureEngine.Run();
-
-	registerArpCaptureThread.Run();
 	
+	m_arpCaptureEngine.Init();
+	m_arpCaptureEngine.Run();
+
+	m_registerArpCaptureThread.Init();
+	m_registerArpCaptureThread.Run();
+
+	m_loadConfigThread.LoadArpCaptureConfig();
+	m_loadConfigThread.Run();
+
+	/*m_capturePacketThread.Init();
+	m_capturePacketThread.Run();*/
+	
+	return RET_SUCCESS;
+}
+
+
+int DaemonProcess::WorkUnInit()
+{
+	m_arpCaptureEngine.StopThread();
+	m_arpCaptureEngine.UnInit();
+
+	m_registerArpCaptureThread.StopThread();
+	m_registerArpCaptureThread.UnInit();
+
+	m_arpCaptureEngine.StopThread();
+	m_arpCaptureEngine.UnInit();
+
+	m_loadConfigThread.StopThread();
+	m_loadConfigThread.UnInit();
+
+	return RET_SUCCESS;
+}
+
+
+int DaemonProcess::Start()
+{
+	
+	if (WorkInit() != RET_SUCCESS)
+	{
+		g_log.Log(ERROR, "[%s-%d-%s]: Work init failed!\n", __FILE__, __LINE__, __FUNCTION__);
+		return RET_ERROR;
+	}
+		
 	while(!g_StopDaemon)
 	{
 		sleep(1);
 	}
 
+	//WorkUnInit();
+	
 	g_log.Log(INFO, "[%s-%d-%s]: Wait for child process exit...", __FILE__, __LINE__, __FUNCTION__);
 
 	return RET_SUCCESS;

@@ -14,7 +14,13 @@ public:
 	RegisterArpCaptureThread();
 	~RegisterArpCaptureThread();
 
+	int Init();
+	
+	int UnInit();
+
 	virtual int ThreadMain(void* pArg);
+
+	int StopThread(void);
 };
 
 }

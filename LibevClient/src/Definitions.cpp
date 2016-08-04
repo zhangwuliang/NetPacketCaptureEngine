@@ -5,6 +5,7 @@ namespace LIBEVCLIENT
 	
 	const char* LOG_CONFIG_FILENAME = "./log4cxx_libevclient.properties";
     const char* PID_FILENAME        = "/var/run/libevclient.pid";
+	const char* CONFIG_FILENAME     = "/tmp/arp_capture.json";
 	
 	const int RET_SUCCESS = 0;
 	const int RET_ERROR = -1;
@@ -23,6 +24,8 @@ namespace LIBEVCLIENT
 	const unsigned int DATA_LEN = 4096;
 
 	unsigned int g_packetMaxnum  = 1024;
+
+	MainConfig g_mainConfig;
 	
 }
 
