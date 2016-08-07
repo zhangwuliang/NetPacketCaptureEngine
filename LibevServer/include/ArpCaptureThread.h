@@ -7,7 +7,7 @@
 #include <cpp_common/BaseThread.h>
 #include <cpp_common/BaseLock.h>
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 class ArpCaptureThread : public BaseThread

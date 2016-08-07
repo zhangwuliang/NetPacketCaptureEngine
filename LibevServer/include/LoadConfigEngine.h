@@ -4,7 +4,7 @@
 #include <cpp_common/BaseThread.h>
 #include <sys/inotify.h>
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 #define INOTIFY_EVENT_SIZE  (sizeof(struct inotify_event))

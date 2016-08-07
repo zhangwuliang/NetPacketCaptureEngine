@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <cpp_common/SocketUtils.h>
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 void threadExit(struct ev_loop *loop, ev_async *watcher, int revents)
@@ -27,8 +27,6 @@ ArpCaptureEngine::~ArpCaptureEngine(void)
 
 int ArpCaptureEngine::Init()
 {
-	g_log.Log(INFO, "[%s-%d-%s]:============ArpCaptureEngine INIT================", __FILE__, __LINE__, __FUNCTION__);
-
 	//create event loop
 	m_loop = ev_loop_new(EVFLAG_AUTO);
 	if (m_loop == NULL)
@@ -81,7 +79,6 @@ int ArpCaptureEngine::UnInit()
 
 int ArpCaptureEngine::ThreadMain(void* pArg)
 {
-	g_log.Log(INFO, "[%s-%d-%s]:============ArpCaptureEngine RUN================", __FILE__, __LINE__, __FUNCTION__);
 	while(!IsStop())
 	{
 		ev_run(m_loop, EVRUN_ONCE);
@@ -102,7 +99,6 @@ int ArpCaptureEngine::StopThread(void)
 
 bool ArpCaptureEngine::NotifyForTask(int fd)
 {
-	g_log.Log(INFO, "[%s-%d-%s]: NotifyForTask!", __FILE__, __LINE__, __FUNCTION__);
 	BSLock bsLock(m_stateLock);
 	if (m_arpSession.getRegisitState())
 	{
@@ -111,15 +107,14 @@ bool ArpCaptureEngine::NotifyForTask(int fd)
 
 	m_arpSession.setRegisitState(true);
 	m_arpSession.sockfd = fd;
+
 	ev_async_send(m_loop, &m_task_notify);
 
 	return true;
 }
 
 int ArpCaptureEngine::ProcessHandShakeTask()
-{
-	g_log.Log(INFO, "[%s-%d-%s]: ProcessHandShakeTask!", __FILE__, __LINE__, __FUNCTION__);
-	
+{	
 	BSLock bsLock(m_stateLock);
 	if (!m_arpSession.getRegisitState() || m_arpSession.sockfd <= 0)
 	{
@@ -138,12 +133,9 @@ int ArpCaptureEngine::ProcessHandShakeTask()
 	ev_io_init(&m_arpSession.ev_write, handleShakeWriteCallBack, m_arpSession.sockfd, EV_WRITE);
 
 	m_arpSession.Init();
+	
+	//Register successful to start read
 	ev_io_start(m_loop, &m_arpSession.ev_read);
-
-	g_log.Log(DEBUG, "[%s-%d-%s]: libev work, socket:[%d]", __FILE__, __LINE__, __FUNCTION__, m_arpSession.sockfd);
-
-	//send test data
-	m_arpSession.pushData2WriteQueue("Hello, World!\n", 13);
 
 	return RET_SUCCESS;
 	
@@ -173,8 +165,6 @@ void ArpCaptureEngine::sessionClosed(Session* session)
 
 void ArpCaptureEngine::TaskNotifyHandler(struct ev_loop* loop, ev_async *watcher, int revents)
 {
-	g_log.Log(INFO, "[%s-%d-%s]: TaskNotifyHandler!", __FILE__, __LINE__, __FUNCTION__);
-	
 	ArpCaptureEngine *pThis = (ArpCaptureEngine*)watcher->data;
 
 	if (!pThis)
@@ -187,8 +177,6 @@ void ArpCaptureEngine::TaskNotifyHandler(struct ev_loop* loop, ev_async *watcher
 
 void ArpCaptureEngine::handleShakeReadCallBack(struct ev_loop* loop, ev_io *watcher, int revents)
 {
-	g_log.Log(INFO, "[%s-%d-%s]:============handleShakeReadCallBack RUN================", __FILE__, __LINE__, __FUNCTION__);
-
 	int rev = 0;
 	if (EV_ERROR & revents)
 	{
@@ -216,7 +204,6 @@ again:
 	                                __FILE__, __LINE__, __FUNCTION__, session->sockfd, rev,
 	                                cmdHead->flag[0], cmdHead->flag[1], cmdHead->flag[2], cmdHead->flag[3]);
 
-				 //session->setBufState(1);
 				 session->setBufPos(1);
 				 goto again;
 			}
@@ -229,17 +216,13 @@ again:
 
 					CmdArpCaptureData cmdArpCaptureData;
 					Util::SetCmdHead(&cmdArpCaptureData.cmdHead, BS_CMD_ARPCAPTURE_DATA, 0, RST_SUCCESS, CMD_ARPCAPTURE_DATA_LEN);
-					//WriteBuffer *buf = new WriteBuffer((const char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
-					//if (buf != NULL)
+					
+					session->pushData2WriteQueue((char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
+					/*if (!ev_is_active(&session->ev_write))
 					{
-						//session->pushBuf2WriteQueue(buf);
-						session->pushData2WriteQueue((char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
-						if (!ev_is_active(&session->ev_write))
-						{
-							ev_io_start(session->ev_loop, &session->ev_write);
-						}
-					}
-					//session->setBufState(COMMAND_HEAD_LEN);
+						ev_io_start(session->ev_loop, &session->ev_write);
+					}*/
+					
 					session->setBufPos(COMMAND_HEAD_LEN);
 				
 				}
@@ -247,15 +230,15 @@ again:
 				case BS_CMD_ARPCAPTURE_REP_DATA:
 				{
 					g_log.Log(DEBUG, "[%s-%d-%s]: Command type: BS_CMD_ARPCAPTURE_REP_DATA", __FILE__, __LINE__, __FUNCTION__);
-					//session->setBufState(COMMAND_HEAD_LEN);
 					session->setBufPos(COMMAND_HEAD_LEN);
 				}
 				break;
 
-			default:
-				g_log.Log(ERROR, "[%s-%d-%s]: Error Arp Capture Command type: [0x%8x]", __FILE__, __LINE__, __FUNCTION__, cmdHead->cmdType);
-	            //session->setBufState(4);
-	            session->setBufPos(4);
+				default:
+				{
+					g_log.Log(ERROR, "[%s-%d-%s]: Error Arp Capture Command type: [0x%8x]", __FILE__, __LINE__, __FUNCTION__, cmdHead->cmdType);
+		            session->setBufPos(4);
+				}
 	            break;
 			}
 
@@ -279,6 +262,7 @@ again:
 
 		ev_io_stop(loop, watcher);
 		sessionClosed(session);
+
 		return;
 	}
 }
@@ -286,8 +270,6 @@ again:
 
 void ArpCaptureEngine::handleShakeWriteCallBack(struct ev_loop* loop, ev_io *watcher, int revents)
 {
-	g_log.Log(INFO, "[%s-%d-%s]:============handleShakeWriteCallBack RUN================", __FILE__, __LINE__, __FUNCTION__);
-
 	if (EV_ERROR & revents)
 	{
 		g_log.Log(ERROR, "[%s-%d-%s]: Get invalid event", __FILE__, __LINE__, __FUNCTION__);
@@ -304,16 +286,12 @@ void ArpCaptureEngine::handleShakeWriteCallBack(struct ev_loop* loop, ev_io *wat
 write_again:
 		if (session->writeQueue.empty())
 		{
-			g_log.Log(INFO, "[%s-%d-%s]:============handleShakeWriteCallBack empty================", __FILE__, __LINE__, __FUNCTION__);
 			ev_io_stop(loop, watcher);
 			return;
 		}
 
 		buf = session->writeQueue.front();
-		g_log.Log(ERROR, "[%s-%d-%s]: Before Send", __FILE__, __LINE__, __FUNCTION__);
-		ssize_t written = send(watcher->fd, "Hello, World!", 13, 0);
-		g_log.Log(ERROR, "[%s-%d-%s]:  Send, fd=%d, write=%d\n", __FILE__, __LINE__, __FUNCTION__, watcher->fd, written);
-		//ssize_t written = send(watcher->fd, buf->dpos(), buf->nbytes(), 0);
+		ssize_t written = send(watcher->fd, buf->dpos(), buf->nbytes(), 0);
 		if (written > 0)
 		{
 			buf->pos += written;

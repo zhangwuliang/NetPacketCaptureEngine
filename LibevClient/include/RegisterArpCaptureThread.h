@@ -5,7 +5,7 @@
 
 #include "Definitions.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 class RegisterArpCaptureThread : public BaseThread

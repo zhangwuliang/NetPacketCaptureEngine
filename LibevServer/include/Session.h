@@ -9,7 +9,7 @@
 #include "Header.h"
 #include "Definitions.h"
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 

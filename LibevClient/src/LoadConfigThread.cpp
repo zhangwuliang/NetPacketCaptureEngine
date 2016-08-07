@@ -6,9 +6,8 @@
 #include <unistd.h>
 #include <fstream>
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
-
 
 LoadConfigThread::LoadConfigThread():m_fd(0)
 {
@@ -51,7 +50,6 @@ int LoadConfigThread::UnInit()
 	
 	return RET_SUCCESS;
 }
-
 
 int LoadConfigThread::ThreadMain(void *pArg)
 {
@@ -142,8 +140,6 @@ int LoadConfigThread::LoadArpCaptureConfig()
 	
 	Json::Value ARP_CAPTURE = root["arp_capture"];
 
-	g_log.Log(ERROR, "[%s-%d-%s]: size=[%d]", __FILE__, __LINE__, __FUNCTION__, ARP_CAPTURE["interfaces"].size());
-	
 	for(int i = 0; i < ARP_CAPTURE["interfaces"].size(); i++)
 	{
 		g_mainConfig.interfaces.push_back(ARP_CAPTURE["interfaces"][i].asString());

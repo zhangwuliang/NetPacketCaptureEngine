@@ -6,7 +6,7 @@
 #include "CapturePacketThread.h"
 #include "LoadConfigThread.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 class DaemonProcess
@@ -21,14 +21,20 @@ public:
 	
 	int Start();
 
+	void doCapturePacket(unsigned int state);
+	
 private:
 	void InitSignHandler();
 	
 public:
-	ArpCaptureEngine         m_arpCaptureEngine;
-	RegisterArpCaptureThread m_registerArpCaptureThread;
-	LoadConfigThread         m_loadConfigThread;
-	CapturePacketThread*     m_capturePacketThread;
+	ArpCaptureEngine          m_arpCaptureEngine;
+	RegisterArpCaptureThread  m_registerArpCaptureThread;
+	LoadConfigThread          m_loadConfigThread;
+	CapturePacketThread*      m_capturePacketThread;
+
+private:
+	bool m_start;
+		
 };
 
 }

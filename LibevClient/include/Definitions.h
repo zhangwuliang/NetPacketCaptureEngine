@@ -3,9 +3,15 @@
 
 #include <cpp_common/Log.h>
 #include <vector>
+#include <sys/time.h>
+#include <sys/types.h>
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
+	typedef unsigned char  u_int8_t;
+	typedef unsigned short u_int16_t;
+	typedef unsigned int   u_int32_t;
+
 	extern const char* LOG_CONFIG_FILENAME;
     extern const char* LOCK_FILENAME;
     extern const char* PID_FILENAME;
@@ -98,6 +104,26 @@ namespace LIBEVCLIENT
 	}MainConfig;
 
 	extern MainConfig g_mainConfig;
+
+	
+	#define NIPQUAD(addr) \
+	  ((unsigned char *)&addr)[0], \
+	  ((unsigned char *)&addr)[1], \
+	  ((unsigned char *)&addr)[2], \
+	  ((unsigned char *)&addr)[3]
+
+	#define NIPQUAD_FMT "%u.%u.%u.%u"
+
+	//The struct of info should be captured
+	typedef struct _dev_info
+	{
+	    u_int16_t active;
+	    u_int8_t  dev_mac[6];
+	    u_int32_t dev_ip;
+	    u_int16_t vlan;
+	    //The current time
+	    timeval find_time;
+	}__attribute__((packed)) DEV_INFO, *P_DEV_INFO;
 
 }
 

@@ -11,9 +11,9 @@
 #include "Definitions.h"
 #include "DaemonProcess.h"
 
-using namespace LIBEVCLIENT;
+using namespace ARP_CAPTURE_CLIENT;
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 	DaemonProcess* g_DaemonProcess = NULL;
 }
@@ -22,9 +22,8 @@ int main(int argc, char* argv[])
 {
 	
 	//init log
-	g_log.Initialize(LOG_CONFIG_FILENAME, "LibevClient");
+	g_log.Initialize(LOG_CONFIG_FILENAME, "ARP_CAPTURE_CLIENT");
 
-	
 	// Initialize the daemon
 	if (RET_ERROR == Util::CreateDaemonProcess())
 	{
@@ -41,7 +40,6 @@ int main(int argc, char* argv[])
         return RET_ERROR;
 	}
 	
-	
 	g_DaemonProcess = new DaemonProcess();
 	if (!g_DaemonProcess->Start()) 
 	{

@@ -3,7 +3,7 @@
 
 #include "Util.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 extern DaemonProcess* g_DaemonProcess;
@@ -15,7 +15,6 @@ RegisterArpCaptureThread::RegisterArpCaptureThread()
 RegisterArpCaptureThread::~RegisterArpCaptureThread()
 {
 }
-
 
 int RegisterArpCaptureThread::Init()
 {
@@ -29,30 +28,27 @@ int RegisterArpCaptureThread::StopThread(void)
 {
 }
 
-	
 int RegisterArpCaptureThread::ThreadMain(void* pArg)
 {
-	g_log.Log(INFO, "[%s-%d-%s]: Arp Capture thread register", __FILE__, __LINE__, __FUNCTION__);
-
 	int count = 1;
 	int socketfd = 0;
 	SocketState sockState;
 
 	Util::SetSocketState(SOCKET_NO_CREATE);
-
+	
 	do
 	{
 		sockState = Util::GetSocketState();
+		g_log.Log(INFO, "[%s-%d-%s]: Regist to BS Engine, count=[%d], state=[%d]...", __FILE__, __LINE__, __FUNCTION__, count++, sockState);
 		if (SOCKET_NO_CREATE == sockState)
 		{
-			g_log.Log(INFO, "[%s-%d-%s]: Regist to BS Engine [%d]...", __FILE__, __LINE__, __FUNCTION__, count++);
 			socketfd = Util::RegisterMode(SERVER, PORT, BS_CMD_ARPCAPTURE_REGIST);
 			if (socketfd > 0)
 			{
 				if (!g_DaemonProcess->m_arpCaptureEngine.NotifyForTask(socketfd))
 				{
 					close(socketfd);
-					g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon test is registed", __FILE__, __LINE__, __FUNCTION__);
+					g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon is registed", __FILE__, __LINE__, __FUNCTION__);
 				}
 				else
 				{
@@ -67,9 +63,9 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 
 		sleep(5);
 		
-	}while(1);
+	}while(!IsStop());
 
-	return 0;
+	return RET_SUCCESS;
 	
 }
 

@@ -3,7 +3,7 @@
 #include <errno.h>
 
 
-using namespace LIBEVSERVER;
+using namespace NET_PACKET_CAPTURE_SERVER;
 
 const int IDLE_TIME                     = 30;
 const int INTVL_TIME                    = 5;

@@ -7,7 +7,7 @@
 #include "DaemonProcess.h"
 #include "Definitions.h"
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 extern DaemonProcess* g_DaemonProcess;
@@ -34,7 +34,6 @@ DaemonProcess::~DaemonProcess()
 int DaemonProcess::Start()
 {
 	signalHandle();	
-	g_log.Log(ERROR, "[%s-%d-%s]: DaemonProcess Start", __FILE__, __LINE__, __FUNCTION__);
 
 	//get scanf config
 	if (RET_SUCCESS != loadConfigEngine.LoadScanConfig())

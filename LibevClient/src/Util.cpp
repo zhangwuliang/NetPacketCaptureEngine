@@ -1,8 +1,7 @@
 #include "Util.h"
 #include <errno.h>
 
-
-using namespace LIBEVCLIENT;
+using namespace ARP_CAPTURE_CLIENT;
 
 const int IDLE_TIME                     = 30;
 const int INTVL_TIME                    = 5;
@@ -188,8 +187,6 @@ int Util::RegisterMode(const char* server, const unsigned int port, CommandType 
 					SetSocketState(SOCKET_SHAKE_HANDS);
 					totle = 0;
 					return socketfd;
-
-					goto recv_data;
 				}
 			}
 			else
@@ -226,7 +223,8 @@ int Util::RegisterMode(const char* server, const unsigned int port, CommandType 
 		
 	}while(1);
 
-	return RET_ERROR;
+	return RET_SUCCESS;
+	
 }
 
 int Util::CreateSocket(const char* server, const unsigned int port)
@@ -269,21 +267,19 @@ void Util::SetCmdHead(CmdHead *cmdHead, CommandType cmdType, unsigned int versio
 {
 	memset(cmdHead, 0, COMMAND_HEAD_LEN);
 	memcpy((void*)cmdHead->flag, (const char*)g_fixFlag, 4);
-	cmdHead->cmdType = cmdType;
+	cmdHead->cmdType   = cmdType;
     cmdHead->versionID = versionID;
     cmdHead->repStatus = repStatus;
-    cmdHead->length = length;
+    cmdHead->length    = length;
 }
 
 int Util::getJsonInt(Json::Value value, const std::string item)
 {
 	if (!value[item].isNull() && value[item].isInt())
 	{
-		//return value[item].asInt();
 		return value.get(item.c_str(), 0).asInt();
 	}
 
-	//g_log.Log(WARNING, "[%s-%d-%s], the config item [%s] type expected int but it is not", __FILE__, __LINE__, __FUNCTION__, item.c_str());
 	return 0;
 }
 
@@ -291,13 +287,9 @@ std::string Util::getJsonString(Json::Value value, const std::string item)
 {
 	if (!value[item].isNull() && value[item].isString())
 	{
-		//return value[item].asString();
 		return value.get(item.c_str(), "").asString();
 	}
 
-	//g_log.Log(WARNING, "[%s-%d-%s], the config item [%s] type expected string but it is not", __FILE__, __LINE__, __FUNCTION__, item.c_str());
 	return "";
 }
-
-
 

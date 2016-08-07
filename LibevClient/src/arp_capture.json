@@ -1,6 +1,0 @@
-{ 
-    "arp_capture": 
-    { 
-        "interfaces": [ "eth0", "eth1", "eth2" ] 
-    }
-}

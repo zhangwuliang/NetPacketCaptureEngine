@@ -1,17 +1,17 @@
 #include "Definitions.h"
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 	
-	const char* LOG_CONFIG_FILENAME = "./log4cxx_libevserver.properties";
-    const char* PID_FILENAME        = "/var/run/libevserver.pid";
+	const char* LOG_CONFIG_FILENAME = "/usr/local/arpcapture/server/log4cxx_net_packet_capture_server.properties";
+    const char* PID_FILENAME        = "/usr/local/arpcapture/server/net_packet_capture_server.pid";
 	
 	const int RET_SUCCESS = 0;
 	const int RET_ERROR = -1;
 	
 	Loger g_log;
 
-	const char* SCAN_CONFIG_FILENAME = "/tmp/scan_config.json";
+	const char* SCAN_CONFIG_FILENAME = "/usr/local/arpcapture/server/net_packet_capture_server.json";
 	
 	const unsigned char g_fixFlag[4]    = {0x77, 0x88, 'B', 'C'};
 

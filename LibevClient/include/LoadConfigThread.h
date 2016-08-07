@@ -4,7 +4,7 @@
 #include <cpp_common/BaseThread.h>
 #include <sys/inotify.h>
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 #define INOTIFY_EVENT_SIZE  (sizeof(struct inotify_event))

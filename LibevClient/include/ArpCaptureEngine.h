@@ -7,7 +7,7 @@
 
 #include <ev++.h>
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 class ArpCaptureEngine : public BaseThread
@@ -32,11 +32,13 @@ public:
 	static void TaskNotifyHandler(struct ev_loop* loop, ev_async *watcher, int revents);
 	static void handleShakeReadCallBack(struct ev_loop* loop, ev_io *watcher, int revents);
 	static void handleShakeWriteCallBack(struct ev_loop* loop, ev_io *watcher, int revents);
+
+public:
+	Session  m_arpSession;
 	
 private:
 	BaseLock m_stateLock;
-	Session  m_arpSession;
-
+	
 	struct ev_loop *m_loop;
 	struct ev_async m_task_notify;
 	struct ev_async m_exit_notify;

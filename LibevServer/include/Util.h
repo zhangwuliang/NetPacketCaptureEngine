@@ -22,7 +22,7 @@
 #include "Definitions.h"
 #include "ServerCommon.h"
 
-using namespace LIBEVSERVER;
+using namespace NET_PACKET_CAPTURE_SERVER;
 
 class Util
 {

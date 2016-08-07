@@ -9,7 +9,7 @@
 #include "Header.h"
 #include "Definitions.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 

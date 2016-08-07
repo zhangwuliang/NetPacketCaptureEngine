@@ -1,11 +1,11 @@
 #include "Definitions.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 	
-	const char* LOG_CONFIG_FILENAME = "./log4cxx_libevclient.properties";
-    const char* PID_FILENAME        = "/var/run/libevclient.pid";
-	const char* CONFIG_FILENAME     = "/tmp/arp_capture.json";
+	const char* LOG_CONFIG_FILENAME = "/usr/local/arpcapture/client/log4cxx_arp_capture_client.properties";
+    const char* PID_FILENAME        = "/usr/local/arpcapture/client/arp_capture_client.pid";
+	const char* CONFIG_FILENAME     = "/usr/local/arpcapture/client/arp_capture_client.json";
 	
 	const int RET_SUCCESS = 0;
 	const int RET_ERROR = -1;

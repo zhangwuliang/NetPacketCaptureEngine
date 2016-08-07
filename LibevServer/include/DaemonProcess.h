@@ -5,7 +5,7 @@
 #include "ServerEngine.h"
 #include "LoadConfigEngine.h"
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 class  DaemonProcess

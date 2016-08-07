@@ -4,7 +4,7 @@
 
 #include <errno.h>
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 extern DaemonProcess g_DaemonProcess;

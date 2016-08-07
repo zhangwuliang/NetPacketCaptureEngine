@@ -1,7 +1,7 @@
 #ifndef __SERVER_COMMON_H__
 #define __SERVER_COMMON_H__
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 
 	typedef enum
@@ -63,6 +63,24 @@ namespace LIBEVSERVER
 	} __attribute__ ((packed)) CmdArpCaptureConfig;
 
 	const unsigned int CMD_ARPCAPTURE_CONFIG_LEN = sizeof(CmdArpCaptureConfig);
+
+	typedef struct 
+	{
+		unsigned short active;
+		char           ip[16];
+		char           mac[18];
+		unsigned short vlanID;
+	}__attribute__ ((packed)) ArpCaptureData;
+
+	const unsigned int ARPCAPTURE_DATA_LEN = sizeof(ArpCaptureData);
+
+	typedef struct 
+	{
+		CmdHead        cmdHead;
+		ArpCaptureData arpCaptureData;
+	} __attribute__ ((packed)) CmdArpCaptureData;
+
+	const unsigned int CMD_ARPCAPTURE_DATA_LEN = sizeof(CmdArpCaptureData);
 
 }
 

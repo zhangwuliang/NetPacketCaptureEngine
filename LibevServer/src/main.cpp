@@ -11,9 +11,9 @@
 #include "Definitions.h"
 #include "DaemonProcess.h"
 
-using namespace LIBEVSERVER;
+using namespace NET_PACKET_CAPTURE_SERVER;
 
-namespace LIBEVSERVER
+namespace NET_PACKET_CAPTURE_SERVER
 {
 	DaemonProcess * g_DaemonProcess = NULL;
 }
@@ -21,7 +21,7 @@ namespace LIBEVSERVER
 int main(int argc, char** argv)
 {
 	//init log
-	g_log.Initialize(LOG_CONFIG_FILENAME, "LibevServer");
+	g_log.Initialize(LOG_CONFIG_FILENAME, "NET_PACKET_CAPTURE_SERVER");
 
 	
 	// Initialize the daemon

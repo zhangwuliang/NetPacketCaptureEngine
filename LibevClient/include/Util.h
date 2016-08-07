@@ -22,7 +22,7 @@
 
 #include "Definitions.h"
 
-using namespace LIBEVCLIENT;
+using namespace ARP_CAPTURE_CLIENT;
 
 class Util
 {

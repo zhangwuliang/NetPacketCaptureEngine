@@ -1,6 +1,7 @@
 #include "Session.h"
+#include "Definitions.h"
 
-namespace LIBEVCLIENT
+namespace ARP_CAPTURE_CLIENT
 {
 
 Session::Session(): socketClosed(false), bRegisit(false), ev_loop(NULL), bufPos(0)
@@ -13,7 +14,7 @@ Session::~Session()
 }
 
 int Session::Init()
-{
+{	
 	//create event loop
 	if (ev_loop == NULL)
 	{
@@ -31,7 +32,7 @@ int Session::Init()
 }
 
 void Session::TaskNotifyHandler(struct ev_loop *loop, ev_async *watcher, int revents)
-{
+{	
 	Session *pThis = (Session*)watcher->data;
 
 	if (!pThis)
@@ -65,7 +66,9 @@ void Session::cleanWorkQueue_()
 	{
 		WriteBuffer *buf = *iter;
 		writeQueue.erase(iter++);
+
 		delete buf;
+		buf = NULL;
 	}
 }
 
