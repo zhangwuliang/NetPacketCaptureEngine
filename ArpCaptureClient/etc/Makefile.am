@@ -1,0 +1,2 @@
+ArpCaptureClient_DATA=arp_capture_client.json log4cxx_arp_capture_client.properties
+ArpCaptureClientdir=@prefix@/arpcapture/client

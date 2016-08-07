@@ -1,0 +1,2 @@
+NetPacketCaptureServer_DATA=net_packet_capture_server.json log4cxx_net_packet_capture_server.properties
+NetPacketCaptureServerdir=@prefix@/arpcapture/server
