@@ -334,7 +334,64 @@ again:
 
 void ArpCaptureThread::handShakeWriteCallBack(struct ev_loop * loop, ev_io *watcher, int revents)
 {
-	g_log.Log(INFO, "[%s-%d-%s]: ArpCaptureThread handShakeWriteCallBack", __FILE__, __LINE__, __FUNCTION__);
+	if (EV_ERROR & revents)
+	{
+		g_log.Log(ERROR, "[%s-%d-%s]: Get invalid event", __FILE__, __LINE__, __FUNCTION__);
+        return;
+	}
+
+	if (EV_WRITE & revents)
+	{
+		Session *session = (Session*)watcher->data;
+
+		BSLock bsLock(session->queueLock);
+		WriteBuffer *buf = NULL;
+
+write_again:
+		if (session->writeQueue.empty())
+		{
+			ev_io_stop(loop, watcher);
+			return;
+		}
+
+		buf = session->writeQueue.front();
+		ssize_t written = send(watcher->fd, buf->dpos(), buf->nbytes(), 0);
+		if (written > 0)
+		{
+			buf->pos += written;
+
+			if (buf->nbytes() == 0)
+			{
+				session->writeQueue.pop_front();
+				delete buf;
+				buf = NULL;
+
+				goto write_again;
+			}
+		}
+		else if (written == 0)
+		{
+			g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture write socket is closed: %d", __FILE__, __LINE__, __FUNCTION__, watcher->fd);
+		}
+		else
+		{
+			if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK) 
+			{
+                return;
+            }
+            else 
+			{
+				//TODO some thing
+                g_log.Log(ERROR, "[%s-%d-%s]: Arp Capture write socket [%d] data error: %d", __FILE__, __LINE__, __FUNCTION__, watcher->fd, errno);
+            }
+		}
+
+		//socket is closed or error
+		ev_io_stop(loop, watcher);
+        g_log.Log(DEBUG, "[%s-%d-%s]: some error occure!", __FILE__, __LINE__, __FUNCTION__);
+        sessionClosed(session);
+		
+	}
 }
 
 
