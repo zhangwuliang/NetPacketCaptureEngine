@@ -46,9 +46,7 @@ void DaemonProcess::InitSignHandler()
 
 
 int DaemonProcess::WorkInit()
-{
-	m_deviceNum = g_mainConfig.interfaces.size();
-	
+{	
 	this->InitSignHandler();
 	
 	m_loadConfigThread.LoadArpCaptureConfig();
@@ -57,6 +55,8 @@ int DaemonProcess::WorkInit()
 	m_arpCaptureEngine.Init();
 	m_arpCaptureEngine.Run();
 
+	m_deviceNum = g_mainConfig.interfaces.size();
+	
 	m_registerArpCaptureThread.Init();
 	m_registerArpCaptureThread.Run();
 
