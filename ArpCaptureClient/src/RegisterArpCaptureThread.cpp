@@ -39,7 +39,8 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 	do
 	{
 		sockState = Util::GetSocketState();
-		g_log.Log(INFO, "[%s-%d-%s]: Regist to BS Engine, count=[%d], state=[%d]...", __FILE__, __LINE__, __FUNCTION__, count++, sockState);
+		g_log.Log(INFO, "[%s-%d-%s]: Regist to Server Engine, count=[%d], state=[%d]...", __FILE__, __LINE__, __FUNCTION__, count++, sockState);
+		
 		if (SOCKET_NO_CREATE == sockState)
 		{
 			socketfd = Util::RegisterMode(SERVER, PORT, BS_CMD_ARPCAPTURE_REGIST);
@@ -48,6 +49,8 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 				if (!g_DaemonProcess->m_arpCaptureEngine.NotifyForTask(socketfd))
 				{
 					close(socketfd);
+					socketfd = 0;
+					
 					g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon is registed", __FILE__, __LINE__, __FUNCTION__);
 				}
 				else
@@ -61,7 +64,7 @@ int RegisterArpCaptureThread::ThreadMain(void* pArg)
 			}
 		}
 
-		sleep(5);
+		sleep(30);
 		
 	}while(!IsStop());
 

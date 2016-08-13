@@ -63,9 +63,7 @@ static void *clientRegist(void* data)
 							g_log.Log(ERROR, "[%s-%d-%s]: Arp capture daemon is registed", __FILE__, __LINE__, __FUNCTION__);
 						}
 						break;
-
-					/*case BS_CMD_HOSTSCAN_REGIST:
-						break;*/
+						
 					default:
 						g_log.Log(ERROR, "[%s-%d-%s]: error client regist command type: [0x%8x]", __FILE__, __LINE__, __FUNCTION__, cmdHead->cmdType);
 						break;

@@ -20,6 +20,7 @@ DaemonProcess::DaemonProcess()
 
 DaemonProcess::~DaemonProcess()
 {
+	WorkUnInit();
 }
 
 void DaemonProcess::InitSignHandler()
@@ -46,6 +47,8 @@ void DaemonProcess::InitSignHandler()
 
 int DaemonProcess::WorkInit()
 {
+	m_deviceNum = g_mainConfig.interfaces.size();
+	
 	this->InitSignHandler();
 	
 	m_loadConfigThread.LoadArpCaptureConfig();
@@ -57,10 +60,10 @@ int DaemonProcess::WorkInit()
 	m_registerArpCaptureThread.Init();
 	m_registerArpCaptureThread.Run();
 
-	int deviceNum = g_mainConfig.interfaces.size();
-	m_capturePacketThread = new CapturePacketThread[deviceNum];
+   	
+	m_capturePacketThread = new CapturePacketThread[m_deviceNum];
 	
-	for(int i = 0; i < deviceNum; i++)
+	for(int i = 0; i < m_deviceNum; i++)
 	{
 		m_capturePacketThread[i].Init(g_mainConfig.interfaces[i]);
 		m_capturePacketThread[i].Run();		
@@ -73,8 +76,14 @@ int DaemonProcess::WorkInit()
 
 int DaemonProcess::WorkUnInit()
 {
-	if (m_capturePacketThread != NULL)
+	for(int i = 0; i < m_deviceNum; i++)
 	{
+		m_capturePacketThread[i].StopThread();
+		m_capturePacketThread[i].UnInit();		
+	}
+	
+	if (m_capturePacketThread != NULL)
+	{	
 		delete[] m_capturePacketThread;
 		m_capturePacketThread = NULL;
 	}
@@ -107,53 +116,7 @@ int DaemonProcess::Start()
 	
 	g_log.Log(INFO, "[%s-%d-%s]: Wait for child process exit...", __FILE__, __LINE__, __FUNCTION__);
 
-	WorkUnInit();
-
 	return RET_SUCCESS;
-}
-
-void DaemonProcess::doCapturePacket(unsigned int state)
-{
-	int deviceNum = 0;
-
-	if (state > 0)
-	{
-		if (!m_start)
-		{
-			deviceNum = g_mainConfig.interfaces.size();
-
-			for (int i = 0; i<deviceNum; i++)
-			{
-				if (RET_ERROR == m_capturePacketThread[i].Init(g_mainConfig.interfaces.at(i)))
-				{
-					continue;
-				}
-				m_capturePacketThread[i].Run();
-			}
-
-			m_start = true;
-		}
-	}
-	else
-	{
-		if (m_start)
-		{
-			deviceNum = g_mainConfig.interfaces.size();
-
-			for (int i = 0; i<deviceNum; i++)
-			{
-				m_capturePacketThread[i].StopThread();
-				g_log.Log(INFO, "[%s-%d-%s]: capture process exit: %d...", __FILE__, __LINE__, __FUNCTION__, i);
-			}
-
-			for (int i = 0; i<deviceNum; i++)
-			{
-				m_capturePacketThread[i].UnInit();
-			}
-
-			m_start = false;
-		}
-	}
 }
 
 }

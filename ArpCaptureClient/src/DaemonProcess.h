@@ -14,17 +14,15 @@ class DaemonProcess
 public:
 	DaemonProcess();
 	~DaemonProcess();
-
-	int WorkInit();
-
-	int WorkUnInit();
 	
 	int Start();
-
-	void doCapturePacket(unsigned int state);
 	
 private:
 	void InitSignHandler();
+	
+	int WorkInit();
+
+	int WorkUnInit();
 	
 public:
 	ArpCaptureEngine          m_arpCaptureEngine;
@@ -33,8 +31,8 @@ public:
 	CapturePacketThread*      m_capturePacketThread;
 
 private:
-	bool m_start;
-		
+	int m_deviceNum;
+	
 };
 
 }

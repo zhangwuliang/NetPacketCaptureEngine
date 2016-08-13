@@ -187,6 +187,7 @@ void ArpCaptureEngine::handleShakeReadCallBack(struct ev_loop* loop, ev_io *watc
 	if (revents & EV_READ)
 	{
 		Session *session = (Session*)watcher->data;
+		//??  recv buf size
 		rev = recv(session->sockfd, session->buf+session->bufPos, DATA_LEN-session->bufPos, 0);
 		if (rev > 0)
 		{
@@ -218,11 +219,7 @@ again:
 					Util::SetCmdHead(&cmdArpCaptureData.cmdHead, BS_CMD_ARPCAPTURE_DATA, 0, RST_SUCCESS, CMD_ARPCAPTURE_DATA_LEN);
 					
 					session->pushData2WriteQueue((char*)(&cmdArpCaptureData), CMD_ARPCAPTURE_DATA_LEN);
-					/*if (!ev_is_active(&session->ev_write))
-					{
-						ev_io_start(session->ev_loop, &session->ev_write);
-					}*/
-					
+								
 					session->setBufPos(COMMAND_HEAD_LEN);
 				
 				}

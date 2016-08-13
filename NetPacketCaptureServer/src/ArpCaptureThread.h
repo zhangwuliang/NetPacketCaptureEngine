@@ -24,7 +24,6 @@ public:
 	int StopThread(void);
 	bool NotifyForTask(int fd);
 	int ProcessHandShakeTask();
-	void SendConfigToArpCapture();
 
 	static void doArpCaptureData(Session *session);
 	static void sessionClosed(Session *session);

@@ -169,22 +169,6 @@ int ArpCaptureThread::ProcessHandShakeTask()
 	return RET_SUCCESS;
 }
 
-void ArpCaptureThread::SendConfigToArpCapture()
-{
-	if (!m_arpSession.getRegisitState())
-	{
-		g_log.Log(INFO, "[%s-%d-%s]: Arp Capture engine not regist", __FILE__, __LINE__, __FUNCTION__);
-        return;
-	}
-
-	BSLock bsLock(g_configLock);
-	CmdArpCaptureConfig cmdArpCaptureConfig;
-	Util::SetCmdHead(&cmdArpCaptureConfig.cmdHead, BS_CMD_ARPCAPTURE_CONFIG, 0, RST_SUCCESS, CMD_ARPCAPTURE_CONFIG_LEN);
-
-	cmdArpCaptureConfig.arpCaptureConfig.enable = 1/*g_arpCaptureConfig.enable*/;
-	m_arpSession.pushData2WriteQueue((char*)(&cmdArpCaptureConfig), CMD_ARPCAPTURE_CONFIG_LEN);
-}
-
 void ArpCaptureThread::doArpCaptureData(Session *session)
 {
 	CmdArpCaptureData *arpCaptureData = (CmdArpCaptureData*)(session->buf);
@@ -315,7 +299,9 @@ again:
 		else 
 		{
             if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
+            {
                 return;
+            }
             else 
 			{
 				//TODO some thing
@@ -363,6 +349,7 @@ write_again:
 			if (buf->nbytes() == 0)
 			{
 				session->writeQueue.pop_front();
+
 				delete buf;
 				buf = NULL;
 

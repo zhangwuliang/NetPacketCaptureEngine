@@ -45,14 +45,11 @@ namespace ARP_CAPTURE_CLIENT
 	typedef enum
 	{
 		BS_CMD_START				= 0xfedc1000,
-	
-		BS_CMD_IPRANGE_CONFIG,
-	
+		
 		BS_CMD_ARPCAPTURE_START 	= 0xfedc2100,
 		BS_CMD_ARPCAPTURE_REGIST,
 		BS_CMD_REP_REGIST_ARPCAPTURE,
-		BS_CMD_ARPCAPTURE_CONFIG,
-		BS_CMD_ARPCAPTURE_DATA, 	//arp capture to border scan engine
+		BS_CMD_ARPCAPTURE_DATA, 	//arp capture to server engine
 		BS_CMD_ARPCAPTURE_REP_DATA,
 		BS_CMD_ARPCAPTURE_END		= 0xfedc2199,
 		

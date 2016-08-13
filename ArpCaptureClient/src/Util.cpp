@@ -171,6 +171,7 @@ int Util::RegisterMode(const char* server, const unsigned int port, CommandType 
 			{
 				SetSocketState(SOCKET_CREATE);
 				totle = 0;
+				
 				goto send_data;
 			}
 		}
