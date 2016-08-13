@@ -20,7 +20,7 @@ public:
 
 	int StopThread(void);
 
-	int LoadScanConfig();
+	int LoadServerConfig();
 	int LoadModuleConfig();
 
 	int Init();

@@ -44,7 +44,7 @@ int LoadConfigEngine::ThreadMain(void *pArg)
                 event = (struct inotify_event*)(&m_buf[evl]);
 
 				sleep(1);
-                if ( RET_SUCCESS != loadConfigEngine->LoadScanConfig())
+                if ( RET_SUCCESS != loadConfigEngine->LoadServerConfig())
 				{
 					g_log.Log(ERROR, "[%s-%d-%s]: Load config %s error, please check the config file.",  __FILE__, __LINE__, __FUNCTION__, SCAN_CONFIG_FILENAME);
 				}
@@ -85,7 +85,7 @@ int LoadConfigEngine::StopThread(void)
 	return pthread_join(GetThreadID(), &pReturnValue);
 }
 
-int LoadConfigEngine::LoadScanConfig()
+int LoadConfigEngine::LoadServerConfig()
 {
 	//read config
 	return RET_SUCCESS;

@@ -35,10 +35,10 @@ int DaemonProcess::Start()
 {
 	signalHandle();	
 
-	//get scanf config
-	if (RET_SUCCESS != loadConfigEngine.LoadScanConfig())
+	//Load config
+	if (RET_SUCCESS != loadConfigEngine.LoadServerConfig())
 	{
-		g_log.Log(ERROR, "[%s-%d-%s]: Load scan config error", __FILE__, __LINE__, __FUNCTION__);
+		g_log.Log(ERROR, "[%s-%d-%s]: Load server config error", __FILE__, __LINE__, __FUNCTION__);
 		return RET_ERROR;
 	}
 
@@ -87,13 +87,7 @@ int DaemonProcess::Init()
 	arpCaptureThread.Init();
 	arpCaptureThread.Run();
 
-/*	hostScanThread.Init();
-	hostScanThread.Run();
-	
-	switchScanThread.Init();
-	switchScanThread.Run();*/
-
-	loadConfigEngine.LoadScanConfig();
+	loadConfigEngine.LoadServerConfig();
 	loadConfigEngine.Run();
 
 	return RET_SUCCESS;

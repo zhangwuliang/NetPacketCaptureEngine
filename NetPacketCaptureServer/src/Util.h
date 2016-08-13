@@ -38,18 +38,8 @@ public:
 	static int CreateDaemonProcess();
 
 	static void SetSocketCntl(int socketfd);
-
-	/*static void SetSocketState(SocketState state);
-
-	static SocketState GetSocketState();
-
-	static int RegisterMode(const char* server, const unsigned int port, CommandType commandType);
-
-	static int CreateSocket(const char* server, const unsigned int port);
-	*/
 	
 	static void SetCmdHead(CmdHead *cmdHead, CommandType cmdType, unsigned int versionID, RepResult repStatus, unsigned int length);
-	
 		
 };
 
