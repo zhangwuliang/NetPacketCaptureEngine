@@ -197,9 +197,27 @@ int Util::RegisterMode(const char* server, const unsigned int port, CommandType 
 				totle = 0;
 			}
 		}
-		else
-		{
-			g_log.Log(ERROR, "[%s-%d-%s]: UNKNOW Socket state [%d]...", __FILE__, __LINE__, __FUNCTION__, (int)state);
+		else if (SOCKET_SHAKE_HANDS == state)
+		{
+		recv_data:
+			memset(&cmdHead, 0, COMMAND_HEAD_LEN);
+
+			ret = recv(socketfd, (char*)(&cmdHead)+totle, COMMAND_HEAD_LEN-totle, 0);
+			if (ret > 0)
+			{
+				totle += ret;
+				if (COMMAND_HEAD_LEN == totle)
+				{
+					SetSocketState(SOCKET_ESTABLISHED);
+					return socketfd;
+				}
+			}
+			else
+			{
+				close(socketfd);
+				SetSocketState(SOCKET_NO_CREATE);
+				totle = 0;
+			}
 		}
 
 		sleep(5);
